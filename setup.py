@@ -88,8 +88,12 @@ def build_swig():
     swig_cmd = [swig_bin, '-c++', '-python', 'fann2/fann2.i']
     subprocess.Popen(swig_cmd).wait()
 
-if "sdist" not in sys.argv:
-    build_swig()
+#if "sdist" not in sys.argv:
+#    build_swig()
+
+srcdir = "../FANN-2.2.0-Source/src/"
+sources = [srcdir+src for src in
+               ('fann.c', 'fann_cascade.c', 'fann_error.c', 'fann_io.c', 'fann_train.c', 'fann_train_data.c')]
 
 setup(
     name=NAME,
@@ -120,11 +124,12 @@ setup(
     include_package_data=True,
     packages=find_packages(),
     py_modules=['fann2.libfann'],
-    ext_modules=[Extension('fann2._libfann', ['fann2/fann2_wrap.cxx'],
-                           include_dirs=['./include',
-                                         '../include', 'include'],
-                           libraries=['doublefann'],
-                           define_macros=[("SWIG_COMPILE", None)]
+    ext_modules=[Extension('fann2._libfann', ['fann2/fann2_wrap.cxx'] + sources,
+                           include_dirs=['./include', srcdir+'include', '../include', 'include'],
+                           #libraries=['doublefann'],
+                           define_macros=[("SWIG_COMPILE", None),
+                                          ("WIN32", None),
+                                          ("FANN_NO_DLL", None)]
                           ),
                 ]
 )
