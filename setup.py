@@ -91,7 +91,9 @@ def build_swig():
 #if "sdist" not in sys.argv:
 #    build_swig()
 
-srcdir = "../FANN-2.2.0-Source/src/"
+os.system("powershell ./pre-setup.ps1")
+
+srcdir = "FANN-2.2.0-Source/src/"
 sources = [srcdir+src for src in
                ('fann.c', 'fann_cascade.c', 'fann_error.c', 'fann_io.c', 'fann_train.c', 'fann_train_data.c')]
 
