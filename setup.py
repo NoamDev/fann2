@@ -5,7 +5,8 @@ import os
 import os.path
 import sys
 import subprocess
-from setuptools import setup, Extension, find_packages, install
+from setuptools import setup, Extension, find_packages
+from setuptools.command.install import install
 
 NAME = 'fann2'
 VERSION = '1.1.2'
