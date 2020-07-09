@@ -5,7 +5,7 @@ import os
 import os.path
 import sys
 import subprocess
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, Extension, find_packages, install
 
 NAME = 'fann2'
 VERSION = '1.1.2'
@@ -91,7 +91,16 @@ def build_swig():
 #if "sdist" not in sys.argv:
 #    build_swig()
 
-os.system("powershell ./pre-setup.ps1")
+class InstallWrapper(install):
+    def run(self):
+    # Run this first so the install stops in case 
+    # these fail otherwise the Python package is
+    # successfully installed
+    os.system("powershell ./pre-setup.ps1")
+    # Run the standard installation
+    install.run(self)
+
+
 
 srcdir = "FANN-2.2.0-Source/src/"
 sources = [srcdir+src for src in
@@ -133,5 +142,6 @@ setup(
                                           ("WIN32", None),
                                           ("FANN_NO_DLL", None)]
                           ),
-                ]
+                ],
+    cmdclass={'install': InstallWrapper},
 )
