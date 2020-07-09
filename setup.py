@@ -93,12 +93,12 @@ def build_swig():
 
 class InstallWrapper(install):
     def run(self):
-    # Run this first so the install stops in case 
-    # these fail otherwise the Python package is
-    # successfully installed
-    os.system("powershell ./pre-setup.ps1")
-    # Run the standard installation
-    install.run(self)
+        # Run this first so the install stops in case 
+        # these fail otherwise the Python package is
+        # successfully installed
+        os.system("powershell ./pre-setup.ps1")
+        # Run the standard installation
+        install.run(self)
 
 
 
