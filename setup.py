@@ -1,12 +1,15 @@
 #!/usr/bin/python
 '''FANN Python bindings setup'''
 
+import hashlib
 import os
 import os.path
 import sys
 import subprocess
 from setuptools import setup, Extension, find_packages
 from setuptools.command.install import install
+import urllib.request
+import shutil
 
 NAME = 'fann2'
 VERSION = '1.1.2'
@@ -97,7 +100,31 @@ class InstallWrapper(install):
         # Run this first so the install stops in case 
         # these fail otherwise the Python package is
         # successfully installed
-        os.system("powershell ./pre-setup.ps1")
+        print('Downloading FANN-2 sources.')
+        url = 'https://sourceforge.net/projects/fann/files/fann/2.2.0/FANN-2.2.0-Source.zip/download'
+        filename = 'FANN-2.2.0-Source.zip'
+        urllib.request.urlretrieve(url, filename)
+        expected_hash = open(filename + '.sha256').read()
+        
+        print('Validating hash')
+        BUF_SIZE = 65536
+        sha256 = hashlib.sha256()
+        with open(filename, 'rb') as f:
+            while True:
+                data = f.read(BUF_SIZE)
+                if not data:
+                    break
+                sha256.update(data)
+
+        if expected_hash != sha256.hexdigest().upper():
+            raise 'Downloaded file does not match FANN-2.2.0-Source.zip.sha256'
+
+        print('Extracting sources')
+        shutil.unpack_archive(filename, '.')
+        print('Runing SWIG')
+        os.system('swig.exe -c++ -python -I"FANN-2.2.0-Source\src\include"  fann2\fann2.i')
+        print('Done')
+
         # Run the standard installation
         install.run(self)
 
