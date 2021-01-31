@@ -122,7 +122,9 @@ class InstallWrapper(install):
         print('Extracting sources')
         shutil.unpack_archive(filename, '.')
         print('Runing SWIG')
-        os.system(r'swig.exe -c++ -python -I"FANN-2.2.0-Source\\src\\include"  fann2\\fann2.i')
+        exit_code = os.system(r'swig.exe -c++ -python -I"FANN-2.2.0-Source\\src\\include"  fann2\\fann2.i')
+        if exit_code != 0:
+            raise "SWIG's exit code was" + str(exit_code)
         print('Done')
 
         # Run the standard installation
