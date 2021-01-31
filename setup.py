@@ -122,7 +122,7 @@ class InstallWrapper(install):
         print('Extracting sources')
         shutil.unpack_archive(filename, '.')
         print('Runing SWIG')
-        os.system('swig.exe -c++ -python -I"FANN-2.2.0-Source\src\include"  fann2\fann2.i')
+        os.system(r'swig.exe -c++ -python -I"FANN-2.2.0-Source\\src\\include"  fann2\\fann2.i')
         print('Done')
 
         # Run the standard installation
